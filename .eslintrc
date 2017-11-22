@@ -1,0 +1,75 @@
+{
+    "env": {
+        "browser": true,
+        "commonjs": true,
+        "es6": true,
+        "node": true
+    },
+    "parserOptions": {
+        "ecmaFeatures": {
+            "jsx": true
+        },
+        "sourceType": "module",
+        "ecmaVersion": 2017
+    },
+    "rules": {
+        "no-const-assign": "warn",
+        "no-this-before-super": "warn",
+        "no-undef": "off",
+        "no-unreachable": "error",
+        "no-unused-vars": "warn",
+        "constructor-super": "warn",
+        "valid-typeof": "warn",
+        "curly": "off",
+        "semi": "error",
+        "one-var": "off",
+        "eqeqeq": "off",
+        "no-process-env": "off",
+        "no-console": "off",
+        "no-process-exit": "off",
+        "no-magic-numbers": "off",
+        "padded-blocks": "off",
+        "no-plusplus": "off",
+        "global-require": "off",
+        "space-before-function-paren": "off",
+        "dot-location": "off",
+        "quote-props": "off",
+        "sort-keys": "off",
+        "func-names": "off",
+        "sort-vars": "off",
+        "sort-imports": "off",
+        "max-len": [
+            "warn",
+            120
+        ],
+        "new-cap": "warn",
+        "object-curly-spacing": "off",
+        "no-negated-condition": "off",
+        "callback-return": "off",
+        "max-params": [
+            "warn",
+            4
+        ],
+        "prefer-arrow-callback": "off",
+        "func-style": [
+            "off",
+            "expression",
+            {
+                "allowArrowFunctions": true
+            }
+        ],
+        "no-warning-comments": "warn",
+        "no-underscore-dangle": "off",
+        "newline-before-return": "warn",
+        "linebreak-style": [
+            "warn",
+            "windows"
+        ],
+        "comma-style": "warn",
+        "camelcase": "warn",
+        "capitalized-comments": "warn",
+        "no-duplicate-imports": "error",
+        "complexity": "warn",
+        "strict": "off"
+    }
+}
