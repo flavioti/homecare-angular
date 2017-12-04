@@ -2,15 +2,30 @@
 
 <head>
     <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="icon" href="/favicon.png">
     <link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/angular_material/1.1.0/angular-material.min.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700,400italic">
     <link rel="stylesheet" href="css/tema.css">
 </head>
 
-<body ng-app="app1" ng-cloak>
+<body ng-app="app1">
 
     <div ng-controller="mainController" ng-init="initialize()" ng-cloak>
+
         <md-content class="md-padding">
-            <md-nav-bar md-selected-nav-item="activeMenu">
+            <div style="display: inline">
+                <img src="favicon.png" width="50px;">
+            </div>
+            <h3 class="md-headline md-padding " style="display: inline">
+                Melhor Idade
+            </h3>
+            <h3 class="md-subhead" style="display: inline-flex">
+                Sistema de gestão de Homecares
+            </h3>
+        </md-content>
+
+        <md-content class="md-padding">
+            <md-nav-bar md-selected-nav-item="activeMenu" aria-label="menu_principal">
                 <md-nav-item md-nav-click="goto('#!home')" name="home">
                     Home
                 </md-nav-item>
@@ -20,17 +35,14 @@
                 <md-nav-item md-nav-click="goto('#!pacientes')" name="pacientes">
                     Pacientes
                 </md-nav-item>
+                <md-nav-item md-nav-click="goto('#!agenda')" name="agenda">
+                    Agenda
+                </md-nav-item>
+
             </md-nav-bar>
 
         </md-content>
     </div>
-
-    <pre>$location.path() = {{$location.path()}}</pre>
-    <pre>$route.current.templateUrl = {{$route.current.templateUrl}}</pre>
-    <pre>$route.current.params = {{$route.current.params}}</pre>
-    <pre>$route.current.scope.name = {{$route.current.scope.name}}</pre>
-    <pre>$routeParams = {{$routeParams}}</pre> aqui
-    <p>{{$scope.activeMenu}}</p>
 
     <div id="main">
 
@@ -39,6 +51,10 @@
         <div ng-view></div>
 
     </div>
+
+    <!-- <div>
+        Icon made by [author link] from www.flaticon.com
+    </div> -->
 
     <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.4/angular.min.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.4/angular-route.js"></script>
