@@ -1,34 +1,38 @@
-<div ng-controller="fisioDetalheController">
-    <div>
-        <!-- <div ng-controller="AppCtrl" ng-cloak> -->
-        <md-content class="md-padding" layout="row">
-            <div flex="100" flex-xs="100" flex-sm="100" flex-md="50" flex-lg="30" layout="row">
+<div ng-controller="fisioDetalheController" ng-init="initialize()">
 
-                <md-card md-theme-watch>
-                    <md-card-title>
-                        <md-card-title-text>
-                            <span class="md-headline">Dr Fernanda</span>
-                            <span class="md-subhead">Bio: asd fasdf sad fasd fasdfasd fasdf sad fasd fasdfasd
-                                fasdf sad fasd fasdfasfasdf sad fasd fasdfasd fasdf
-                                sad fasd fasdf</span>
-                            <span class="md-subhead">Especialidades: Geriatria</span>
-                            <span class="md-subhead">Idade: 37</span>
-                        </md-card-title-text>
-                        <md-card-title-media>
-                            <div class="md-media-lg card-media">
-                                <img src="http://blog.carci.net/wp-content/uploads/2017/10/130087-sucesso-profissional-como-se-tornar-referencia-como-fisioterapeuta-825x542.jpg"
-                                    style="max-width: 150px;">
-                            </div>
-                        </md-card-title-media>
-                    </md-card-title>
-                    <md-card-actions layout="row" layout-align="end center">
-                        <md-button ng-click="toggleSidebarDetail()">Editar</md-button>
-                    </md-card-actions>
-                </md-card>
+    <div layout="row" layout-align="end top" style="float: right;">
+        <md-fab-speed-dial ng-class="md-scale">
+            <md-fab-trigger>
+                <md-button aria-label="menu" class="md-fab" ng-click="newAction()">
+                    <md-icon md-svg-src="img/add.svg"></md-icon>
+                </md-button>
+            </md-fab-trigger>
 
-            </div>
-        </md-content>
-        <!-- </div> -->
+        </md-fab-speed-dial>
+    </div>
+
+    <div class="md-padding" layout="row" layout-wrap>
+        <md-card style="min-width: 300px;" ng-repeat="fisio in dataset.fisioList">
+            <md-card-title>
+                <md-card-title-text>
+                    <span class="md-headline" ng-bind="fisio.id.value"></span>
+                    <span class="md-headline" ng-bind="fisio.nome.value"></span>
+                    <span class="md-subhead" ng-bind="fisio.especialidade.value"></span>
+                    <span class="md-subhead" ng-bind="fisio.idade.value"></span>
+                </md-card-title-text>
+                <md-card-title-media>
+                    <div class="md-media-lg card-media">
+                        <img class="md-card-image" ng-src="{{fisio.foto.value}}" style="max-width: 150px;">
+                    </div>
+                </md-card-title-media>
+            </md-card-title>
+            <md-card-content>
+            </md-card-content>
+            <md-card-actions layout="row" layout-align="end center">
+                <md-button ng-click="editFisioAction(fisio)">Editar</md-button>
+                <md-button ng-click="deleteFisioAction(fisio)">Apagar</md-button>
+            </md-card-actions>
+        </md-card>
     </div>
 
     <section layout="row" flex>
@@ -39,19 +43,34 @@
             <md-content layout-padding>
                 <form>
                     <md-input-container>
+                        <label for="nomeInput">Código</label>
+                        <input type="text" id="nomeInput" ng-model="dataset.fisio.id.value" ng-disabled="true">
+                    </md-input-container>
+                    <md-input-container>
                         <label for="nomeInput">Nome</label>
-                        <input type="text" id="nomeInput" ng-model="dataset.fisio.nome.value" md-autofocus>
+                        <input type="text" id="nomeInput" maxlength="50" ng-model="dataset.fisio.nome.value"
+                            md-autofocus>
+                        <small class="label-error" ng-show="dataset.fisio.nome.error" ng-bind="dataset.fisio.nome.errorMessage"></small>
                     </md-input-container>
                     <md-input-container>
                         <label for="idadeInput">Idade</label>
-                        <input type="number" id="idadeInput" ng-model="dataset.fisio.idade.value">
+                        <input type="number" ng-change="idadeInputFormat();" min="18" max="99" maxlength="2"
+                            id="idadeInput" ng-model="dataset.fisio.idade.value">
+                        <small class="label-error" ng-show="dataset.fisio.idade.error" ng-bind="dataset.fisio.idade.errorMessage"></small>
                     </md-input-container>
                     <md-input-container>
                         <label for="especialidadeInput">Especialidade</label>
-                        <input type="number" id="especialidadeInput" ng-model="dataset.fisio.especialidade.value">
+                        <input type="text" id="especialidadeInput" maxlength="50" ng-model="dataset.fisio.especialidade.value">
+                        <small class="label-error" ng-show="dataset.fisio.especialidade.error" ng-bind="dataset.fisio.especialidade.errorMessage"></small>
+                    </md-input-container>
+                    <md-input-container>
+                        <label for="fotoInput">Foto</label>
+                        <input type="text" id="fotoInput" maxlength="50" ng-model="dataset.fisio.foto.value"
+                            md-autofocus>
+                        <small class="label-error" ng-show="dataset.fisio.foto.error" ng-bind="dataset.fisio.foto.errorMessage"></small>
                     </md-input-container>
                 </form>
-                <md-button ng-click="toggleSidebarDetail()" class="md-primary">
+                <md-button ng-click="saveAction()" class="md-primary">
                     Salvar
                 </md-button>
                 <md-button ng-click="toggleSidebarDetail()" class="md-primary">
@@ -61,15 +80,5 @@
         </md-sidenav>
     </section>
 
-    <div class="lock-size" layout="row" layout-align="end end">
-        <md-fab-speed-dial ng-class="md-scale">
-            <md-fab-trigger>
-                <md-button aria-label="menu" class="md-fab" ng-click="toggleSidebarDetail()">
-                    <md-icon md-svg-src="img/add.svg"></md-icon>
-                </md-button>
-            </md-fab-trigger>
-
-        </md-fab-speed-dial>
-    </div>
 
 </div>
