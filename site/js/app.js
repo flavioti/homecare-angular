@@ -2,7 +2,8 @@ angular
     .module('app1', ['ngMaterial', 'ngRoute'])
     .config(config)
     .controller('mainController', mainController)
-    .controller('homeController', homeController);
+    .controller('homeController', homeController)
+    .controller('fisioDetalheController', fisioDetalheController);
 
 function config($routeProvider, $mdThemingProvider) {
     $routeProvider
@@ -57,4 +58,11 @@ function mainController($scope, $route, $routeParams, $location) {
 
 function homeController($scope) {
 
+}
+
+function fisioDetalheController($scope, $timeout, $mdSidenav, $log) {
+
+    $scope.toggleSidebarDetail = function () {
+        $mdSidenav('right').toggle();
+    };
 }
