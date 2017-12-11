@@ -1,0 +1,79 @@
+<link rel="stylesheet" href="css/angular-timeline.css">
+
+<div ng-controller="timelineController" ng-init="initialize()">
+
+    <div layout="row" layout-align="end top" style="float: right;">
+        <md-fab-speed-dial ng-class="md-scale">
+            <md-fab-trigger>
+                <md-button aria-label="menu" class="md-fab" ng-click="newAction()">
+                    <md-icon md-svg-src="img/add.svg"></md-icon>
+                </md-button>
+            </md-fab-trigger>
+
+        </md-fab-speed-dial>
+    </div>
+
+    <div class="md-padding" layout="row" layout-wrap>
+
+        <section id="cd-timeline" class="cd-container">
+
+            <div class="cd-timeline-block" ng-repeat="line in dataset.timeline">
+                <div class="cd-timeline-img">
+                </div>
+                <div class="cd-timeline-content">
+                    <h2>Paciente: {{line.paciente}}</h2>
+                    <p>Fisioterapeuta: {{line.fisioterapeuta}}</p>
+                    <p>Endereço: {{line.endereco}}</p>
+                    <p>Telefone: {{line.telefone}}</p>
+                    <p>Enfermidade: {{line.enfermidade}}</p>
+                    <md-card-actions layout="row" layout-align="end center">
+                        <md-button ng-click="apagarAgendamento(paciente)">Remover agendamento</md-button>
+                    </md-card-actions>
+                    <span class="cd-date">Jan 14</span>
+                </div>
+            </div>
+
+        </section>
+
+    </div>
+
+    <section layout="row" flex>
+        <md-sidenav class="md-sidenav-right md-whiteframe-4dp" md-component-id="right">
+            <md-toolbar>
+                <h1 class="md-toolbar-tools">Cadastro</h1>
+            </md-toolbar>
+            <md-content layout-padding>
+                <md-button ng-click="saveAction()" class="md-primary">
+                    Salvar
+                </md-button>
+                <md-button ng-click="toggleSidebarDetail()" class="md-primary">
+                    Descartar
+                </md-button>
+                <form>
+                    <md-input-container>
+                        <label for="codigoInput">Código</label>
+                        <input type="text" id="codigoInput" ng-model="dataset.timeline.id.value" ng-disabled="true">
+                    </md-input-container>
+
+                    <md-input-container>
+                        <label>Fisioterapeuta</label>
+                        <input type="text">
+                    </md-input-container>
+
+                    <md-input-container>
+                        <label>Paciente</label>
+                        <input type="text">
+                    </md-input-container>
+
+                    <md-input-container>
+                        <label>Data</label>
+                        <md-datepicker type="text" md-placeholder="Escolha uma data" ng-model="teste"></md-datepicker>
+                    </md-input-container>
+
+                </form>
+            </md-content>
+        </md-sidenav>
+    </section>
+
+
+</div>
