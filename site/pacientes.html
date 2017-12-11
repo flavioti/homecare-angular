@@ -1,4 +1,4 @@
-<div ng-controller="fisioDetalheController" ng-init="initialize()">
+<div ng-controller="pacienteDetalheController" ng-init="initialize()">
 
     <div layout="row" layout-align="end top" style="float: right;">
         <md-fab-speed-dial ng-class="md-scale">
@@ -12,25 +12,25 @@
     </div>
 
     <div class="md-padding" layout="row" layout-wrap>
-        <md-card style="min-width: 300px;" ng-repeat="fisio in dataset.fisioList">
+        <md-card style="min-width: 300px;" ng-repeat="paciente in dataset.pacienteList">
             <md-card-title>
                 <md-card-title-text>
-                    <span class="md-headline" ng-bind="fisio.nome.value"></span>
-                    <span class="md-subhead" ng-bind="fisio.especialidade.value"></span>
-                    <span class="md-subhead" ng-bind="fisio.idade.value"></span>
-                    <span class="md-subhead" ng-bind="fisio.id.value"></span>
+                    <span class="md-headline" ng-bind="paciente.nome.value"></span>
+                    <span class="md-subhead" ng-bind="paciente.idade.value"></span>
+                    <span class="md-subhead" ng-bind="paciente.enfermidade.value"></span>
+                    <span class="md-subhead" ng-bind="paciente.id.value"></span>
                 </md-card-title-text>
                 <md-card-title-media>
                     <div class="md-media-lg card-media">
-                        <img class="md-card-image" ng-src="{{fisio.foto.value}}" style="max-width: 150px;">
+                        <span class="md-subhead" ng-bind="paciente.relatorio.value"></span>
                     </div>
                 </md-card-title-media>
             </md-card-title>
             <md-card-content>
             </md-card-content>
             <md-card-actions layout="row" layout-align="end center">
-                <md-button ng-click="editFisioAction(fisio)">Editar</md-button>
-                <md-button ng-click="deleteFisioAction(fisio)">Apagar</md-button>
+                <md-button ng-click="editPacienteAction(paciente)">Editar</md-button>
+                <md-button ng-click="deletePacienteAction(paciente)">Apagar</md-button>
             </md-card-actions>
         </md-card>
     </div>
@@ -50,30 +50,29 @@
                 <form>
                     <md-input-container>
                         <label for="nomeInput">Código</label>
-                        <input type="text" id="nomeInput" ng-model="dataset.fisio.id.value" ng-disabled="true">
+                        <input type="text" id="nomeInput" ng-model="dataset.paciente.id.value" ng-disabled="true">
                     </md-input-container>
                     <md-input-container>
                         <label for="nomeInput">Nome</label>
-                        <input type="text" id="nomeInput" maxlength="50" ng-model="dataset.fisio.nome.value"
+                        <input type="text" id="nomeInput" maxlength="50" ng-model="dataset.paciente.nome.value"
                             md-autofocus>
-                        <small class="label-error" ng-show="dataset.fisio.nome.error" ng-bind="dataset.fisio.nome.errorMessage"></small>
+                        <small class="label-error" ng-show="dataset.paciente.nome.error" ng-bind="dataset.paciente.nome.errorMessage"></small>
                     </md-input-container>
                     <md-input-container>
                         <label for="idadeInput">Idade</label>
                         <input type="number" ng-change="idadeInputFormat();" min="18" max="99" maxlength="2"
-                            id="idadeInput" ng-model="dataset.fisio.idade.value">
-                        <small class="label-error" ng-show="dataset.fisio.idade.error" ng-bind="dataset.fisio.idade.errorMessage"></small>
+                            id="idadeInput" ng-model="dataset.paciente.idade.value">
+                        <small class="label-error" ng-show="dataset.paciente.idade.error" ng-bind="dataset.paciente.idade.errorMessage"></small>
                     </md-input-container>
                     <md-input-container>
-                        <label for="especialidadeInput">Especialidade</label>
-                        <input type="text" id="especialidadeInput" maxlength="50" ng-model="dataset.fisio.especialidade.value">
-                        <small class="label-error" ng-show="dataset.fisio.especialidade.error" ng-bind="dataset.fisio.especialidade.errorMessage"></small>
+                        <label for="enfermidadeInput">Enfermidade</label>
+                        <input type="text" id="enfermidadeInput" maxlength="50" ng-model="dataset.paciente.enfermidade.value">
+                        <small class="label-error" ng-show="dataset.paciente.enfermidade.error" ng-bind="dataset.paciente.enfermidade.errorMessage"></small>
                     </md-input-container>
                     <md-input-container>
-                        <label for="fotoInput">Foto</label>
-                        <input type="text" id="fotoInput" maxlength="200" ng-model="dataset.fisio.foto.value"
-                            md-autofocus>
-                        <small class="label-error" ng-show="dataset.fisio.foto.error" ng-bind="dataset.fisio.foto.errorMessage"></small>
+                        <label for="relatorioInput">Relatório</label>
+                        <input type="text" id="relatorioInput" maxlength="999" ng-model="dataset.paciente.relatorio.value">
+                        <small class="label-error" ng-show="dataset.paciente.relatorio.error" ng-bind="dataset.paciente.relatorio.errorMessage"></small>
                     </md-input-container>
                 </form>
             </md-content>
