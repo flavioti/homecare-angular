@@ -6,7 +6,10 @@ angular
     .controller('mainController', mainController)
     .controller('homeController', homeController)
     .controller('fisioDetalheController', fisioDetalheController)
-    .factory('storageService', storageService);
+    .controller('pacienteDetalheController', pacienteDetalheController)
+    .controller('timelineController', timelineController)
+    .factory('storageService', storageService)
+    .factory('utilService', utilService);
 
 function config($routeProvider, $mdThemingProvider) {
     $routeProvider
@@ -16,10 +19,16 @@ function config($routeProvider, $mdThemingProvider) {
         })
         .when("/fisioterapeutas", {
             templateUrl: "fisioterapeutas.html",
-            controller: homeController
+        })
+        .when("/pacientes", {
+            templateUrl: "pacientes.html",
+        })
+        .when("/timeline", {
+            templateUrl: "timeline.html",
         })
         .otherwise({
-            template: "<h5>Pagina padrão</h5>"
+            templateUrl: "home.html",
+            controller: homeController
         });
 
     $mdThemingProvider.definePalette('minhaPaleta', {
@@ -47,12 +56,8 @@ function config($routeProvider, $mdThemingProvider) {
         .primaryPalette('minhaPaleta');
 }
 
-function mainController($scope, $route, $routeParams, $location) {
-
+function mainController($scope) {
     $scope.activeMenu = document.location.href.split("/").pop();
-
-    $scope.initialize = function () {};
-
     $scope.goto = function (activeMenu) {
         $scope.activeMenu = activeMenu;
         document.location.href = activeMenu;
@@ -60,10 +65,10 @@ function mainController($scope, $route, $routeParams, $location) {
 }
 
 function homeController($scope) {
-
+    // Colocar aqui página inicial com estatísticas
 }
 
-function fisioDetalheController($scope, $timeout, $mdSidenav, $log, storageService, $mdToast) {
+function fisioDetalheController($scope, $timeout, $mdSidenav, $log, storageService, utilService) {
 
     $scope.dataset = {};
 
@@ -115,7 +120,7 @@ function fisioDetalheController($scope, $timeout, $mdSidenav, $log, storageServi
             idade: 18,
             nome: '',
             especialidade: '',
-            foto: 'https://maxcdn.icons8.com/Share/icon/dotty/Users/person_male1600.png',
+            foto: 'http://blogdocruz.com.br/wp-content/plugins/social-media-builder/img/no-image.png',
         });
         $mdSidenav('right').open();
     };
@@ -123,11 +128,7 @@ function fisioDetalheController($scope, $timeout, $mdSidenav, $log, storageServi
     $scope.saveAction = function () {
         try {
             if (!validateObject($scope.dataset.fisio)) {
-                $mdToast.show(
-                    $mdToast.simple()
-                    .textContent('Existem erros no formulário')
-                    .hideDelay(3000)
-                );
+                utilService.exibirMensagem('Existem erros no formulário');
 
                 return;
             }
@@ -135,11 +136,7 @@ function fisioDetalheController($scope, $timeout, $mdSidenav, $log, storageServi
             fetchFisioList();
             $mdSidenav('right').close();
         } catch (err) {
-            $mdToast.show(
-                $mdToast.simple()
-                .textContent(err)
-                .hideDelay(3000)
-            );
+            utilService.exibirMensagem(err);
         }
     };
 
@@ -154,45 +151,194 @@ function fisioDetalheController($scope, $timeout, $mdSidenav, $log, storageServi
         $mdSidenav('right').open();
     };
 
-    $scope.deleteFisioAction = function (fisio) {
+    function deleteFisio(fisio) {
         storageService.deleteFisio(fisio);
         fetchFisioList();
-        $mdToast.show(
-            $mdToast.simple()
-            .textContent('Apagado')
-            .hideDelay(3000)
-        );
     };
 
+    $scope.deleteFisioAction = function (fisio) {
+        utilService.exibirConfirmacao().then(function () {
+            deleteFisio(fisio);
+            utilService.exibirMensagem('Fisioterapeuta apagado');
+        }, function () {
+            utilService.exibirMensagem('Não foi apagado');
+        });
+    };
 
+};
 
+function pacienteDetalheController($scope, $timeout, $mdSidenav, $log, storageService, utilService) {
+
+    $scope.dataset = {};
+
+    $scope.initialize = function () {
+        fetchPacienteList();
+    };
+
+    function fetchPacienteList() {
+        $scope.dataset.pacienteList = storageService.getPacienteList();
+    }
+
+    function prepararEdicao(paciente) {
+        return {
+            id: Object.assign({}, campoEstruturaPadrao, campoNaoVazio, {
+                title: 'Código',
+                name: 'id',
+                value: paciente.id
+            }),
+            nome: Object.assign({}, campoEstruturaPadrao, campoNaoVazio, {
+                title: 'Nome',
+                name: 'nome',
+                value: paciente.nome
+            }),
+            idade: Object.assign({}, campoEstruturaPadrao, campoNaoVazio, {
+                title: 'Idade',
+                name: 'idade',
+                value: paciente.idade
+            }),
+            enfermidade: Object.assign({}, campoEstruturaPadrao, campoNaoVazio, {
+                title: 'Enfermidade',
+                name: 'enfermidade',
+                value: paciente.enfermidade
+            }),
+            relatorio: Object.assign({}, campoEstruturaPadrao, campoNaoVazio, {
+                title: 'Relatório',
+                name: 'relatorio',
+                value: paciente.relatorio
+            }),
+        };
+    };
+
+    $scope.toggleSidebarDetail = function () {
+        $mdSidenav('right').toggle();
+    };
+
+    $scope.newAction = function () {
+        $scope.dataset.paciente = prepararEdicao({
+            id: Math.floor(Math.random() * 99999999) + 1,
+            nome: '',
+            idade: 60,
+            enfermidade: '',
+            relatorio: '',
+        });
+        $mdSidenav('right').open();
+    };
+
+    $scope.saveAction = function () {
+        try {
+            if (!validateObject($scope.dataset.paciente)) {
+                utilService.exibirMensagem('Existem erros no formulário');
+
+                return;
+            }
+            storageService.savePaciente($scope.dataset.paciente);
+            fetchPacienteList();
+            $mdSidenav('right').close();
+        } catch (err) {
+            utilService.exibirMensagem(err);
+        }
+    };
+
+    $scope.editPacienteAction = function (paciente) {
+        $scope.dataset.paciente = prepararEdicao({
+            id: paciente.id.value,
+            nome: paciente.nome.value,
+            idade: paciente.idade.value,
+            enfermidade: paciente.enfermidade.value,
+            relatorio: paciente.relatorio.value
+        });
+        $mdSidenav('right').open();
+    };
+
+    function deletePacienteAction(paciente) {
+        storageService.deletePaciente(paciente);
+        fetchPacienteList();
+    };
+
+    $scope.deletePacienteAction = function (paciente) {
+        utilService.exibirConfirmacao().then(function () {
+            deletePacienteAction(paciente);
+            utilService.exibirMensagem('Paciente apagado');
+        }, function () {
+            utilService.exibirMensagem('Pensou melhor né? :P');
+        });
+    };
+};
+
+function timelineController($scope, $timeout, $mdSidenav, $log, storageService, utilService) {
+
+    $scope.dataset = {
+        timeline: []
+    };
+
+    $scope.initialize = function () {
+
+    };
+
+    $scope.newAction = function () {
+        $scope.toggleSidebarDetail();
+    };
+
+    $scope.toggleSidebarDetail = function () {
+        $mdSidenav('right').toggle();
+    };
+
+    $scope.saveAction = function () {
+        $scope.dataset.timeline.push({
+            paciente: 'Teste',
+            fisioterapeuta: 'Teste',
+            endereco: 'teste',
+            enfermidade: 'enfermidade'
+        });
+        $mdSidenav('right').toggle();
+    };
+};
+
+function utilService($mdToast, $mdDialog) {
+    return {
+        exibirMensagem: function (msg) {
+            $mdToast.show(
+                $mdToast.simple()
+                .textContent(msg)
+                .hideDelay(3000)
+            );
+        },
+        exibirConfirmacao: function () {
+            return new Promise(function (resolve, reject) {
+                var confirm = $mdDialog.confirm()
+                    .title('Confimar exclusão')
+                    .textContent('Essa operação não pode ser desfeita')
+                    .ok('Sim')
+                    .cancel('Não');
+
+                $mdDialog.show(confirm).then(resolve, reject);
+            });
+        }
+    };
 };
 
 function storageService() {
     return {
+        // Fisioterapeuta
         getFisioList: function () {
             try {
-                var tmp = JSON.parse(window.localStorage.getItem('fisioList'));
-                if (tmp == null) {
-                    tmp = [];
-                    window.localStorage.setItem('fisioList', []);
+                var raw = window.localStorage.getItem('fisioList');
+                if (raw === '') {
+                    raw = null;
+                };
+                raw = JSON.parse(raw);
+                if (raw == null) {
+                    raw = [];
+                    window.localStorage.setItem('fisioList', '[]');
                 }
 
-                return tmp;
+                return raw;
             } catch (err) {
                 console.error(err);
 
                 return [];
             }
         },
-        // getFisioById: function (idFisio) {
-        //     var fisioList = JSON.parse(window.localStorage.getItem('fisioList'));
-        //     fisioList.filter((element) => {
-        //         if (element.idFisio = idFisio) {
-        //             return element;
-        //         }
-        //     });
-        // },
         saveFisio: function (fisio) {
             // Apaga a versão antiga se existir
             this.deleteFisio(fisio);
@@ -215,6 +361,49 @@ function storageService() {
                 }
             });
             window.localStorage.setItem('fisioList', JSON.stringify(fisioList));
+        },
+        // Paciente
+        getPacienteList: function () {
+            try {
+                var raw = window.localStorage.getItem('pacienteList');
+                if (raw === '') {
+                    raw = null;
+                };
+                raw = JSON.parse(raw);
+                if (raw == null) {
+                    raw = [];
+                    window.localStorage.setItem('pacienteList', '[]');
+                }
+
+                return raw;
+            } catch (err) {
+                console.error(err);
+
+                return [];
+            }
+        },
+        savePaciente: function (paciente) {
+            // Apaga a versão antiga se existir
+            this.deletePaciente(paciente);
+            var pacienteList = JSON.parse(window.localStorage.getItem('pacienteList'));
+            // Grava a versão nova
+            pacienteList.push(paciente);
+            window.localStorage.setItem('pacienteList', JSON.stringify(pacienteList));
+        },
+        deletePaciente: function (paciente) {
+            var tmp = window.localStorage.getItem('pacienteList');
+            if ((tmp == null) || (tmp == '')) {
+                tmp = '[]';
+            }
+            var pacienteList = JSON.parse(tmp);
+            pacienteList = pacienteList.filter((element) => {
+                if (element.id.value != paciente.id.value) {
+                    return element;
+                } else {
+                    console.warn('Eliminando item e gravando');
+                }
+            });
+            window.localStorage.setItem('pacienteList', JSON.stringify(pacienteList));
         },
     };
 };
