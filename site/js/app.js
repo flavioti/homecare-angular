@@ -7,6 +7,7 @@ angular
     .controller('homeController', homeController)
     .controller('fisioDetalheController', fisioDetalheController)
     .controller('pacienteDetalheController', pacienteDetalheController)
+    .controller('timelineController', timelineController)
     .factory('storageService', storageService)
     .factory('utilService', utilService);
 
@@ -18,11 +19,12 @@ function config($routeProvider, $mdThemingProvider) {
         })
         .when("/fisioterapeutas", {
             templateUrl: "fisioterapeutas.html",
-            controller: homeController
         })
         .when("/pacientes", {
             templateUrl: "pacientes.html",
-            controller: homeController
+        })
+        .when("/timeline", {
+            templateUrl: "timeline.html",
         })
         .otherwise({
             templateUrl: "home.html",
@@ -54,12 +56,8 @@ function config($routeProvider, $mdThemingProvider) {
         .primaryPalette('minhaPaleta');
 }
 
-function mainController($scope, $route, $routeParams, $location) {
-
+function mainController($scope) {
     $scope.activeMenu = document.location.href.split("/").pop();
-
-    $scope.initialize = function () {};
-
     $scope.goto = function (activeMenu) {
         $scope.activeMenu = activeMenu;
         document.location.href = activeMenu;
@@ -67,7 +65,7 @@ function mainController($scope, $route, $routeParams, $location) {
 }
 
 function homeController($scope) {
-
+    // Colocar aqui página inicial com estatísticas
 }
 
 function fisioDetalheController($scope, $timeout, $mdSidenav, $log, storageService, utilService) {
@@ -264,6 +262,35 @@ function pacienteDetalheController($scope, $timeout, $mdSidenav, $log, storageSe
         }, function () {
             utilService.exibirMensagem('Pensou melhor né? :P');
         });
+    };
+};
+
+function timelineController($scope, $timeout, $mdSidenav, $log, storageService, utilService) {
+
+    $scope.dataset = {
+        timeline: []
+    };
+
+    $scope.initialize = function () {
+
+    };
+
+    $scope.newAction = function () {
+        $scope.toggleSidebarDetail();
+    };
+
+    $scope.toggleSidebarDetail = function () {
+        $mdSidenav('right').toggle();
+    };
+
+    $scope.saveAction = function () {
+        $scope.dataset.timeline.push({
+            paciente: 'Teste',
+            fisioterapeuta: 'Teste',
+            endereco: 'teste',
+            enfermidade: 'enfermidade'
+        });
+        $mdSidenav('right').toggle();
     };
 };
 

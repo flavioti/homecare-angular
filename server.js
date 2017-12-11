@@ -5,7 +5,7 @@ let app = express();
 app.use('/', express.static('site'));
 
 const PORT = process.env.PORT || 8080;
-const IP = '192.168.15.18'; //'127.0.0.1';
+const IP = '192.168.15.13'; //'127.0.0.1';
 
 console.log(process.env.NODE_ENV);
 
